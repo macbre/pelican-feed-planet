@@ -48,7 +48,10 @@ class Planet:
         self.logger.info('Parsing "%s" feed from <%s> ...', name, url)
 
         try:
-            parsed = feedparser.parse(url)
+            parsed = feedparser.parse(
+                url_file_stream_or_string=url,
+                agent=self.get_user_agent(),
+            )
         except URLError as ex:
             # handle broken SSL certificates
             raise FeedError(f"Could not download {name}'s feed: {str(ex)}")
@@ -166,3 +169,7 @@ class Planet:
         # render some information when run in GitHub Actions
         # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-a-notice-message
         print(f"::notice::Fetched {len(articles)} articles from {len(feeds)} feeds")
+
+    @staticmethod
+    def get_user_agent() -> str:
+        return f'pelican-planet +https://github.com/macbre/pelican-planet'
