@@ -16,6 +16,16 @@ jobs:
       id-token: write
 
     steps:
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.14'
+
+      - name: Install dependencies and prepare a sdist
+        run: |
+          python setup.py sdist
+          ls -lh dist/
+
       # https://github.com/pypa/gh-action-pypi-publish?tab=readme-ov-file#trusted-publishing
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
