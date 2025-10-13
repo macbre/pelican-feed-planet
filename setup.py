@@ -39,16 +39,10 @@ setup(
     name="pelican-planet",
     description="Blog aggregator plugin for Pelican",
     long_description="%s\n\n%s" % (README, CHANGES),
+    long_description_content_type="text/x-rst",
     version="0.24.0",
     classifiers=[
-        "Development Status :: 5 - Stable",
-        "Framework :: Pelican :: Plugins",
-        (
-            "License :: OSI Approved :: GNU Affero General Public License v3 or "
-            "later (AGPLv3+)"
-        ),
-        "Topic :: Internet :: WWW/HTTP",
-        "Topic :: Internet :: WWW/HTTP :: Site Management",
+        "Development Status :: 5 - Production/Stable",
     ],
     python_requires=">=3.9",
     author="Mathieu Bridon",
