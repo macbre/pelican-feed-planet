@@ -36,7 +36,7 @@ REQUIREMENTS = get_requirements("requirements.txt")
 
 
 setup(
-    name="pelican-planet",
+    name="pelican-feed-planet",
     description="Blog aggregator plugin for Pelican",
     long_description="%s\n\n%s" % (README, CHANGES),
     long_description_content_type="text/x-rst",
