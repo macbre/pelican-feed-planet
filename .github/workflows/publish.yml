@@ -1,0 +1,21 @@
+on:
+  release:
+    types:
+      - published
+
+name: Publish
+
+# https://docs.pypi.org/trusted-publishers/using-a-publisher/
+jobs:
+  pypi-publish:
+    name: Upload to PyPI
+    runs-on: ubuntu-latest
+
+    permissions:
+      # IMPORTANT: this permission is mandatory for Trusted Publishing
+      id-token: write
+
+    steps:
+      # https://github.com/pypa/gh-action-pypi-publish?tab=readme-ov-file#trusted-publishing
+      - name: Publish package distributions to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
