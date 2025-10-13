@@ -25,6 +25,7 @@ jobs:
 
       - name: Install dependencies and prepare a sdist
         run: |
+          pip install setuptools wheel
           python setup.py sdist
           ls -lh dist/
 
