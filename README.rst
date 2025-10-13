@@ -1,6 +1,6 @@
 Blog aggregation, static-website style!
 =======================================
-.. image:: https://coveralls.io/repos/github/macbre/pelican-planet/badge.svg?branch=master :target: https://coveralls.io/github/macbre/pelican-planet?branch=master
+.. image:: https://coveralls.io/repos/github/macbre/pelican-feed-planet/badge.svg?branch=master :target: https://coveralls.io/github/macbre/pelican-feed-planet?branch=master
 
 This is a plugin for the `Pelican`_ static site generator.
 
