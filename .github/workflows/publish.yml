@@ -16,6 +16,6 @@ jobs:
       id-token: write
 
     steps:
-      # retrieve your distributions here
+      # https://github.com/pypa/gh-action-pypi-publish?tab=readme-ov-file#trusted-publishing
       - name: Publish package distributions to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
