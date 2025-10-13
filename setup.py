@@ -39,7 +39,7 @@ setup(
     name="pelican-planet",
     description="Blog aggregator plugin for Pelican",
     long_description="%s\n\n%s" % (README, CHANGES),
-    version="0.23.0",
+    version="0.24.0",
     classifiers=[
         "Development Status :: 5 - Stable",
         "Framework :: Pelican :: Plugins",
