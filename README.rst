@@ -13,7 +13,7 @@ Usage
 
 Install this plugin::
 
-    $ pip install git+https://framagit.org/bochecha/pelican-planet#egg=pelican_planet
+    $ pip install pelican-feed-planet==0.24.0
 
 Then, in your Pelican config file, enable the plugin::
 
