@@ -2,5 +2,5 @@
 
 black==25.11.0
 coverage==7.10.7
-pytest==8.4.2
+pytest==9.0.2
 pytest-cov==7.0.0
