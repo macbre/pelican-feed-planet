@@ -15,7 +15,6 @@ jobs:
         # https://devguide.python.org/versions/
         # https://github.com/actions/python-versions/blob/main/versions-manifest.json
         python-version:
-        - "3.9"
         - "3.10"
         - "3.11"
         - "3.12"
@@ -59,7 +58,7 @@ jobs:
     # https://coveralls-python.readthedocs.io/en/latest/usage/index.html
     # upload coverage report for just one of Python version matrix runs
     - name: Upload coverage report to Coveralls
-      if: matrix.python-version == '3.12'
+      if: matrix.python-version == '3.14'
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
