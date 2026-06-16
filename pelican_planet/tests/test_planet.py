@@ -117,7 +117,7 @@ def test_get_no_feeds():
 def test_get_feeds_404(monkeypatch, datadir):
     from pelican_planet.planet import Planet
 
-    def mock_parse(url):
+    def mock_parse(**kwargs):
         return {"status": 404}
 
     monkeypatch.setattr(feedparser, "parse", mock_parse)
@@ -134,7 +134,7 @@ def test_get_feeds_404(monkeypatch, datadir):
 def test_get_feeds_500(monkeypatch, datadir):
     from pelican_planet.planet import Planet
 
-    def mock_parse(url):
+    def mock_parse(**kwargs):
         return {"status": 500}
 
     monkeypatch.setattr(feedparser, "parse", mock_parse)
@@ -151,7 +151,7 @@ def test_get_feeds_500(monkeypatch, datadir):
 def test_get_feeds_ssl_error(monkeypatch, datadir):
     from pelican_planet.planet import Planet
 
-    def mock_parse(url):
+    def mock_parse(**kwargs):
         return {
             "bozo": 1,
             "bozo_exception": CertificateError(
