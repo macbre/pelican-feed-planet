@@ -172,4 +172,4 @@ class Planet:
 
     @staticmethod
     def get_user_agent() -> str:
-        return f'pelican-planet +https://github.com/macbre/pelican-planet'
+        return f"pelican-planet +https://github.com/macbre/pelican-planet"
