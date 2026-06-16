@@ -11,7 +11,7 @@ It allows generating a page aggregating blog articles from other web sites.
 Install this plugin:
 
 ```
-$ pip install pelican-feed-planet==0.24.0
+$ pip install pelican-feed-planet
 ```
 
 Then, in your Pelican config file, enable the plugin:
