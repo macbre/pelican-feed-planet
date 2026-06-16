@@ -44,7 +44,7 @@ setup(
     classifiers=[
         "Development Status :: 5 - Production/Stable",
     ],
-    python_requires=">=3.9",
+    python_requires=">=3.11",
     author="Mathieu Bridon",
     author_email="bochecha@daitauha.fr",
     url="https://github.com/macbre/pelican-planet",
