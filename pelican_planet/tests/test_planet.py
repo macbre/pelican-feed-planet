@@ -295,6 +295,25 @@ def test_ssl_errors_handling(datadir, tmpdir):
     assert destinationpath.open().read().strip() == expected
 
 
+def test_media_content_image(datadir):
+    from pelican_planet.planet import Planet
+
+    feeds = {
+        "ForoysktDaily": "file://%s/mastodon.rss.xml" % datadir,
+    }
+    p = Planet(feeds)
+    p.get_feeds()
+
+    assert len(p._articles) == 3
+
+    images = [a["image"] for a in p._articles]
+    assert images == [
+        "https://files.mastodon.social/media_attachments/files/111/850/122/307/080/898/original/3b8fcb1f07af82f6.png",
+        "https://files.mastodon.social/media_attachments/files/111/first.png",
+        None,
+    ]
+
+
 def test_http_requests():
     # make sure to run ./test-server.sh before executing this test case
     from pelican_planet.planet import Planet

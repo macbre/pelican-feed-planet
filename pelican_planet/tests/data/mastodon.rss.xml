@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
+  <channel>
+    <title>ForoysktDaily</title>
+    <description>ForoysktDaily posts</description>
+    <link>https://mastodon.social/@ForoysktDaily</link>
+    <item>
+      <title>Post with image attachment</title>
+      <link>https://mastodon.social/@ForoysktDaily/111850122307080898</link>
+      <pubDate>Mon, 29 Jan 2024 12:00:00 +0000</pubDate>
+      <description>A post with a media:content image attachment</description>
+      <media:content url="https://files.mastodon.social/media_attachments/files/111/850/122/307/080/898/original/3b8fcb1f07af82f6.png" type="image/png" fileSize="3128351" medium="image">
+        <media:rating scheme="urn:simple">adult</media:rating>
+        <media:description type="plain">Teistin ferry</media:description>
+      </media:content>
+    </item>
+    <item>
+      <title>Post with multiple media attachments</title>
+      <link>https://mastodon.social/@ForoysktDaily/111850122307080899</link>
+      <pubDate>Mon, 29 Jan 2024 11:00:00 +0000</pubDate>
+      <description>A post with multiple media:content attachments</description>
+      <media:content url="https://files.mastodon.social/media_attachments/files/111/first.png" type="image/png" medium="image"/>
+      <media:content url="https://files.mastodon.social/media_attachments/files/111/second.jpg" type="image/jpeg" medium="image"/>
+    </item>
+    <item>
+      <title>Post without image attachment</title>
+      <link>https://mastodon.social/@ForoysktDaily/111850122307080900</link>
+      <pubDate>Mon, 29 Jan 2024 10:00:00 +0000</pubDate>
+      <description>A post without any media:content</description>
+    </item>
+  </channel>
+</rss>
