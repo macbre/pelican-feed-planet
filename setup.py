@@ -30,7 +30,7 @@ def get_requirements(path):
     return list(lines)
 
 
-README = Path("README.rst").open().read()
+README = Path("README.md").open().read()
 CHANGES = Path("CHANGES.rst").open().read()
 REQUIREMENTS = get_requirements("requirements.txt")
 
@@ -39,7 +39,7 @@ setup(
     name="pelican-feed-planet",
     description="Blog aggregator plugin for Pelican",
     long_description="%s\n\n%s" % (README, CHANGES),
-    long_description_content_type="text/x-rst",
+    long_description_content_type="text/markdown",
     version="0.24.0",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
