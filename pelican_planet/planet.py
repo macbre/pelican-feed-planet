@@ -97,6 +97,16 @@ class Planet:
                         "%Y-%m-%d"
                     )  # e.g. 2002-12-04
 
+                    article["image"] = next(
+                        (
+                            m["url"]
+                            for m in article.get("media_content") or []
+                            if m.get("medium") == "image"
+                            or (m.get("type") or "").startswith("image/")
+                        ),
+                        None,
+                    )
+
                     yield article
 
                 # e.g. KeyError - updated
