@@ -40,7 +40,7 @@ setup(
     description="Blog aggregator plugin for Pelican",
     long_description="%s\n\n%s" % (README, CHANGES),
     long_description_content_type="text/markdown",
-    version="0.24.0",
+    version="0.25.0",
     classifiers=[
         "Development Status :: 5 - Production/Stable",
     ],
