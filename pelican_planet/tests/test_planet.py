@@ -22,10 +22,10 @@ from ssl import CertificateError
 
 import feedparser
 
+from pelican_planet.planet import Planet
+
 
 def test_get_feeds(datadir):
-    from pelican_planet.planet import Planet
-
     feeds = {
         "Le blog à Perceval": "file://%s/perceval.atom.xml" % datadir,
     }
@@ -49,7 +49,6 @@ def test_get_feeds(datadir):
 
 
 def test_get_multiple_feeds(datadir):
-    from pelican_planet.planet import Planet
 
     feeds = OrderedDict(
         [  # Need to guarantee ordering for this test
@@ -80,7 +79,6 @@ def test_get_multiple_feeds(datadir):
 
 
 def test_get_multiple_feeds_with_limit(datadir):
-    from pelican_planet.planet import Planet
 
     feeds = OrderedDict(
         [  # Need to guarantee ordering for this test
@@ -105,7 +103,6 @@ def test_get_multiple_feeds_with_limit(datadir):
 
 
 def test_get_no_feeds():
-    from pelican_planet.planet import Planet
 
     p = Planet({})
     p.get_feeds()
@@ -115,7 +112,6 @@ def test_get_no_feeds():
 
 
 def test_get_feeds_404(monkeypatch, datadir):
-    from pelican_planet.planet import Planet
 
     def mock_parse(**kwargs):
         return {"status": 404}
@@ -132,7 +128,6 @@ def test_get_feeds_404(monkeypatch, datadir):
 
 
 def test_get_feeds_500(monkeypatch, datadir):
-    from pelican_planet.planet import Planet
 
     def mock_parse(**kwargs):
         return {"status": 500}
@@ -149,7 +144,6 @@ def test_get_feeds_500(monkeypatch, datadir):
 
 
 def test_get_feeds_ssl_error(monkeypatch, datadir):
-    from pelican_planet.planet import Planet
 
     def mock_parse(**kwargs):
         return {
@@ -172,7 +166,6 @@ def test_get_feeds_ssl_error(monkeypatch, datadir):
 
 
 def test_write_page(datadir, tmpdir):
-    from pelican_planet.planet import Planet
 
     templatepath = Path(datadir.join("planet.md.tmpl").strpath)
     destinationpath = Path(tmpdir.join("planet.md").strpath)
@@ -202,7 +195,6 @@ def test_write_page(datadir, tmpdir):
 
 
 def test_write_page_from_multiple_feeds(datadir, tmpdir):
-    from pelican_planet.planet import Planet
 
     templatepath = Path(datadir.join("planet.md.tmpl").strpath)
     destinationpath = Path(tmpdir.join("planet.md").strpath)
@@ -236,7 +228,6 @@ def test_write_page_from_multiple_feeds(datadir, tmpdir):
 
 
 def test_write_page_from_multiple_feeds_with_total_limit(datadir, tmpdir):
-    from pelican_planet.planet import Planet
 
     templatepath = Path(datadir.join("planet.md.tmpl").strpath)
     destinationpath = Path(tmpdir.join("planet.md").strpath)
@@ -264,7 +255,6 @@ def test_write_page_from_multiple_feeds_with_total_limit(datadir, tmpdir):
 
 
 def test_ssl_errors_handling(datadir, tmpdir):
-    from pelican_planet.planet import Planet
 
     templatepath = Path(datadir.join("planet.md.tmpl").strpath)
     destinationpath = Path(tmpdir.join("planet.md").strpath)
@@ -296,7 +286,6 @@ def test_ssl_errors_handling(datadir, tmpdir):
 
 
 def test_media_content_image(datadir):
-    from pelican_planet.planet import Planet
 
     feeds = {
         "ForoysktDaily": "file://%s/mastodon.rss.xml" % datadir,
@@ -315,7 +304,6 @@ def test_media_content_image(datadir):
 
 
 def test_channel_image_and_media_content(datadir):
-    from pelican_planet.planet import Planet
 
     feeds = {
         "ForoysktDaily": "file://%s/farerskie_kadry.xml" % datadir,
@@ -333,7 +321,6 @@ def test_channel_image_and_media_content(datadir):
 
 def test_http_requests():
     # make sure to run ./test-server.sh before executing this test case
-    from pelican_planet.planet import Planet
 
     feeds = {
         "Karadoc": "http://localhost:8088/karadoc.atom.xml",
@@ -343,4 +330,6 @@ def test_http_requests():
     p.get_feeds()
     articles = p._articles
 
-    assert len(articles) == 3
+    assert (
+        len(articles) == 3
+    ), "Make sure to run ./test-server.sh before executing this test case"
