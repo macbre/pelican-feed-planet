@@ -314,6 +314,23 @@ def test_media_content_image(datadir):
     ]
 
 
+def test_channel_image_and_media_content(datadir):
+    from pelican_planet.planet import Planet
+
+    feeds = {
+        "ForoysktDaily": "file://%s/farerskie_kadry.xml" % datadir,
+    }
+    p = Planet(feeds)
+    p.get_feeds()
+
+    assert len(p._articles) == 1
+
+    images = [a["image"] for a in p._articles]
+    assert images == [
+        "https://farerskiekadry.pl/wp-content/uploads/2026/04/Mjolkarbatur_trap-scaled.jpg",
+    ]
+
+
 def test_http_requests():
     # make sure to run ./test-server.sh before executing this test case
     from pelican_planet.planet import Planet

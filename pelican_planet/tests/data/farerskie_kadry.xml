@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:media="http://search.yahoo.com/mrss/"
+	>
+
+<channel>
+	<title>Farerskie kadry</title>
+	<atom:link href="https://farerskiekadry.pl/feed" rel="self" type="application/rss+xml" />
+	<link>https://farerskiekadry.pl/</link>
+	<description>Blog o Wyspach Owczych</description>
+	<lastBuildDate>Fri, 12 Jun 2026 23:01:33 +0000</lastBuildDate>
+	<language>pl-PL</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+
+	<image>
+		<url>https://farerskiekadry.pl/favicon.svg</url>
+		<title>Farerskie kadry</title>
+		<link>https://farerskiekadry.pl/</link>
+		<width>128</width>
+		<height>128</height>
+	</image>
+
+<site xmlns="com-wordpress:feed-additions:1">209003494</site>
+    <item>
+		<title>Mleczne promy</title>
+		<link>https://farerskiekadry.pl/2026/04/mleczne-promy.html</link>
+
+		<dc:creator><![CDATA[Maciej Brencz]]></dc:creator>
+		<pubDate>Tue, 28 Apr 2026 20:02:37 +0000</pubDate>
+				<category><![CDATA[Historia]]></category>
+		<category><![CDATA[Infrastruktura]]></category>
+		<category><![CDATA[Streymoy]]></category>
+		<category><![CDATA[Transport]]></category>
+		<category><![CDATA[Klaksvíksstríðið]]></category>
+		<category><![CDATA[mjølkabátur]]></category>
+		<category><![CDATA[mjólkarbátar]]></category>
+		<category><![CDATA[promy]]></category>
+		<category><![CDATA[Strandfaraskip Landsins]]></category>
+		<category><![CDATA[Ternan]]></category>
+		<category><![CDATA[trap.fo]]></category>
+		<guid isPermaLink="false">https://farerskiekadry.pl/?p=6684</guid>
+
+					<description><![CDATA[<p>Farerzy &#8211; tak jak każda wyspiarska nacja &#8211; zależni są od morza. Łodź przez stulecia była nieodzownym środkiem transportu. Zanim drogową sieć na Wyspach Owczych wzbogaciły podmorskie tunele, jedynym sposobem przemieszczania się między wyspami były łodzie. Intrygującym epizodem w marynistycznej historii archipelagu są mjølkabátar &#8211; sieć promów uruchomiona przez stołeczną mleczarnię. Mleko ma najszybszy transport [&#8230;]</p>
+<p>Artykuł <a href="https://farerskiekadry.pl/2026/04/mleczne-promy.html">Mleczne promy</a> pochodzi z serwisu <a href="https://farerskiekadry.pl">Farerskie kadry</a>.</p>
+]]></description>
+
+        <media:content url="https://farerskiekadry.pl/wp-content/uploads/2026/04/Mjolkarbatur_trap-scaled.jpg" medium="image">
+		<post-id xmlns="com-wordpress:feed-additions:1">6684</post-id>
+    </item>
+</channel>
