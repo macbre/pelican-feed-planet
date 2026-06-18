@@ -82,9 +82,9 @@ class Planet:
 
         return parsed
 
-    def _get_articles(self, feed: object, feed_name: str):
+    def _get_articles(self, feed: dict, feed_name: str):
         def _get_articles():
-            for article in feed.get("entries", []):
+            for article in feed.get("entries", []):  # type: dict
                 try:
                     updated = make_date(article["updated"])
 
