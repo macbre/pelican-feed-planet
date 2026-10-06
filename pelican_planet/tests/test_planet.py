@@ -167,9 +167,9 @@ def test_get_feeds_ssl_error(monkeypatch, datadir):
 
 def test_write_page(datadir, tmpdir):
 
-    templatepath = Path(datadir.join("planet.md.tmpl").strpath)
-    destinationpath = Path(tmpdir.join("planet.md").strpath)
-    assert not destinationpath.exists()
+    template_path = Path(datadir.join("planet.md.tmpl").strpath)
+    destination_path = Path(tmpdir.join("planet.md").strpath)
+    assert not destination_path.exists()
 
     expected = "\n\n\n".join(
         [
@@ -189,9 +189,9 @@ def test_write_page(datadir, tmpdir):
     }
     p = Planet(feeds)
     p.get_feeds()
-    p.write_page(templatepath, destinationpath)
+    p.write_page(template_path, destination_path)
 
-    assert destinationpath.open().read().strip() == expected
+    assert destination_path.open().read().strip() == expected
 
 
 def test_write_page_from_multiple_feeds(datadir, tmpdir):
@@ -229,9 +229,9 @@ def test_write_page_from_multiple_feeds(datadir, tmpdir):
 
 def test_write_page_from_multiple_feeds_with_total_limit(datadir, tmpdir):
 
-    templatepath = Path(datadir.join("planet.md.tmpl").strpath)
-    destinationpath = Path(tmpdir.join("planet.md").strpath)
-    assert not destinationpath.exists()
+    template_path = Path(datadir.join("planet.md.tmpl").strpath)
+    destination_path = Path(tmpdir.join("planet.md").strpath)
+    assert not destination_path.exists()
 
     expected = "\n\n\n".join(
         [
@@ -249,16 +249,16 @@ def test_write_page_from_multiple_feeds_with_total_limit(datadir, tmpdir):
     }
     p = Planet(feeds)
     p.get_feeds()
-    p.write_page(templatepath, destinationpath, max_articles=4)
+    p.write_page(template_path, destination_path, max_articles=4)
 
-    assert destinationpath.open().read().strip() == expected
+    assert destination_path.open().read().strip() == expected
 
 
 def test_ssl_errors_handling(datadir, tmpdir):
 
-    templatepath = Path(datadir.join("planet.md.tmpl").strpath)
-    destinationpath = Path(tmpdir.join("planet.md").strpath)
-    assert not destinationpath.exists()
+    template_path = Path(datadir.join("planet.md.tmpl").strpath)
+    destination_path = Path(tmpdir.join("planet.md").strpath)
+    assert not destination_path.exists()
 
     expected = "\n\n\n".join(
         [
@@ -280,9 +280,158 @@ def test_ssl_errors_handling(datadir, tmpdir):
 
     p = Planet(feeds)
     p.get_feeds()
-    p.write_page(templatepath, destinationpath, max_articles=4)
+    p.write_page(template_path, destination_path, max_articles=4)
 
-    assert destinationpath.open().read().strip() == expected
+    assert destination_path.open().read().strip() == expected
+
+
+def test_write_feed(datadir, tmpdir):
+
+    destination_path = Path(tmpdir.join("planet.rss.xml").strpath)
+    assert not destination_path.exists()
+
+    feeds = {
+        "Le blog à Perceval": "file://%s/perceval.atom.xml" % datadir,
+        "L'auberge à Karadoc": "file://%s/karadoc.atom.xml" % datadir,
+    }
+    p = Planet(feeds)
+    p.get_feeds()
+    p.write_feed(
+        destination_path,
+        title="Kaamelott planet",
+        link="https://example.org/",
+        description="Blogs of the Round Table",
+    )
+
+    generated = feedparser.parse(destination_path.open().read())
+
+    assert generated["feed"]["title"] == "Kaamelott planet"
+    assert generated["feed"]["link"] == "https://example.org/"
+    assert generated["feed"]["subtitle"] == "Blogs of the Round Table"
+
+    assert [entry["title"] for entry in generated["entries"]] == [
+        "Sloubi 325 !",
+        "Sept cent quarante-quatre",
+        "Sloubi 324 !",
+        "Unagi",
+        "Sloubi 5 !",
+        "Sloubi 4 !",
+        "Sloubi 3 !",
+        "Sloubi 2 !",
+        "Sloubi 1 !",
+        "Le gras, c'est la vie",
+    ]
+
+    first = generated["entries"][0]
+    assert first["link"] == "https://cestpasfaux.fr/blog/2016/11/20/sloubi-325/"
+    assert first["author"] == "Perceval le Gallois"
+    assert first["published"] == "Sun, 20 Nov 2016 10:15:00 +0200"
+    assert [tag["term"] for tag in first["tags"]] == ["Le blog à Perceval"]
+    # the HTML markup of the summary is kept intact
+    assert first["summary"].startswith("<p>Sloubi 325 ! Sloubi 325 !")
+
+
+def test_write_feed_with_total_limit(datadir, tmpdir):
+
+    destination_path = Path(tmpdir.join("planet.rss.xml").strpath)
+
+    feeds = {
+        "Le blog à Perceval": "file://%s/perceval.atom.xml" % datadir,
+        "L'auberge à Karadoc": "file://%s/karadoc.atom.xml" % datadir,
+    }
+    p = Planet(feeds)
+    p.get_feeds()
+    p.write_feed(
+        destination_path,
+        title="Kaamelott planet",
+        link="https://example.org/",
+        max_articles=3,
+    )
+
+    generated = feedparser.parse(destination_path.open().read())
+
+    assert [entry["title"] for entry in generated["entries"]] == [
+        "Sloubi 325 !",
+        "Sept cent quarante-quatre",
+        "Sloubi 324 !",
+    ]
+
+
+def test_write_feed_with_no_articles(tmpdir):
+
+    destination_path = Path(tmpdir.join("planet.rss.xml").strpath)
+
+    p = Planet({})
+    p.get_feeds()
+    p.write_feed(destination_path, title="Empty planet", link="https://example.org/")
+
+    generated = feedparser.parse(destination_path.open().read())
+
+    assert generated["feed"]["title"] == "Empty planet"
+    assert generated["entries"] == []
+
+
+def test_write_feed_skips_incomplete_articles(datadir, tmpdir):
+
+    destination_path = Path(tmpdir.join("planet.rss.xml").strpath)
+
+    feeds = {
+        "Le blog à Perceval": "file://%s/perceval.atom.xml" % datadir,
+    }
+    p = Planet(feeds)
+    p.get_feeds()
+
+    # articles with no title or no link cannot end up in the feed
+    del p._articles[0]["title"]
+    p._articles[1]["link"] = ""
+
+    p.write_feed(
+        destination_path, title="Kaamelott planet", link="https://example.org/"
+    )
+
+    generated = feedparser.parse(destination_path.open().read())
+
+    assert [entry["title"] for entry in generated["entries"]] == [
+        "Sloubi 5 !",
+        "Sloubi 4 !",
+        "Sloubi 3 !",
+        "Sloubi 2 !",
+        "Sloubi 1 !",
+    ]
+
+
+def test_write_feed_with_images(datadir, tmpdir):
+
+    destination_path = Path(tmpdir.join("planet.rss.xml").strpath)
+
+    feeds = {
+        "ForoysktDaily": "file://%s/mastodon.rss.xml" % datadir,
+    }
+    p = Planet(feeds)
+    p.get_feeds()
+    p.write_feed(destination_path, title="ForoysktDaily", link="https://example.org/")
+
+    generated = feedparser.parse(destination_path.open().read())
+
+    # the last article has no image attached, hence no enclosure
+    enclosures = [entry.get("links")[1:] for entry in generated["entries"]]
+    assert [
+        [(link["href"], link["type"]) for link in links] for links in enclosures
+    ] == [
+        [
+            (
+                "https://files.mastodon.social/media_attachments/files/111/850/122/307/080/898/original/3b8fcb1f07af82f6.png",
+                "image/png",
+            )
+        ],
+        [
+            (
+                "https://files.mastodon.social/media_attachments/files/111/first.png",
+                "image/png",
+            )
+        ],
+        [],
+    ]
 
 
 def test_media_content_image(datadir):

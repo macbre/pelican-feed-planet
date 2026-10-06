@@ -96,6 +96,45 @@ in your Pelican config file:
   By default the `summary` of the article will be the full text coming from
   the feed.
 
+## RSS feed
+
+Besides the aggregation page, this plugin can write the aggregated articles as
+an RSS 2.0 feed file, so that your readers can subscribe to your planet:
+
+```
+PLANET_RSS_FILE = 'output/planet.rss.xml'
+```
+
+The feed is only generated when `PLANET_RSS_FILE` is set. Point it to a file in
+your Pelican output directory (it is created if it does not exist yet), and it
+will be published along with the rest of your website.
+
+Each item of the feed carries the article's title, link, summary, author,
+publication date and, as a category, the name of the feed it comes from. When
+an article has an image attached, it is added to the item as an enclosure.
+
+The number of items is limited by `PLANET_MAX_ARTICLES`, just like the
+aggregation page.
+
+The feed metadata defaults to your Pelican settings, but can be customized:
+
+* `PLANET_RSS_TITLE`: The title of the feed.
+
+  Defaults to `SITENAME`.
+
+* `PLANET_RSS_LINK`: The URL of the website the feed belongs to.
+
+  Defaults to `SITEURL`.
+
+* `PLANET_RSS_DESCRIPTION`: The description of the feed.
+
+  Defaults to `SITESUBTITLE`, or to the title of the feed.
+
+* `PLANET_RSS_URL`: The public URL of the feed file itself, advertised in the
+  feed as its `atom:link rel="self"` element.
+
+  By default, no such element is added.
+
 ## Legalities
 
 pelican-planet is offered under the terms of the

@@ -15,8 +15,11 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with pelican-planet.  If not, see <http://www.gnu.org/licenses/>.
 import logging
+import mimetypes
 import re
 from http.client import HTTPException
+
+from pathlib import Path
 
 from time import mktime
 
@@ -25,6 +28,7 @@ from urllib.error import URLError
 from operator import attrgetter
 
 import feedparser
+from feedgenerator import Enclosure, Rss201rev2Feed
 from jinja2 import Template
 
 from .utils import make_date, make_summary
@@ -146,13 +150,19 @@ class Planet:
             except FeedError as ex:
                 logging.error(f"Error parsing <{url}> - {str(ex)}", exc_info=True)
 
-    def write_page(self, template, destination, max_articles=None):
+    def _get_sorted_articles(self, max_articles=None):
+        """
+        Returns the aggregated articles, the most recent ones first
+        """
         articles = sorted(self._articles, key=attrgetter("timestamp"), reverse=True)
         logging.info(
             f"Fetched {len(articles)} articles (will render up to {max_articles})"
         )
 
-        articles = articles[:max_articles]
+        return articles[:max_articles]
+
+    def write_page(self, template, destination, max_articles=None):
+        articles = self._get_sorted_articles(max_articles)
 
         feeds = [
             # feed name, feed URL, blog URL (protocol + domain)
@@ -169,6 +179,73 @@ class Planet:
         # render some information when run in GitHub Actions
         # https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-a-notice-message
         print(f"::notice::Fetched {len(articles)} articles from {len(feeds)} feeds")
+
+    def write_feed(
+        self,
+        destination: Path,
+        title: str,
+        link: str,
+        description: str = "",
+        max_articles=None,
+        feed_url: str = None,
+    ):
+        """
+        Writes the aggregated articles as an RSS 2.0 feed file
+        """
+        articles = self._get_sorted_articles(max_articles)
+
+        feed = Rss201rev2Feed(
+            title=title,
+            link=link,
+            description=description,
+            feed_url=feed_url,
+        )
+
+        for article in articles:
+            # an RSS item makes no sense without these two
+            if not article.get("title") or not article.get("link"):
+                logging.warning(
+                    f"Skipping an article with no title or link: {repr(article)}"
+                )
+                continue
+
+            feed.add_item(
+                title=article["title"],
+                link=article["link"],
+                description=article["summary"],
+                author_name=article.get("author") or article["feed_name"],
+                pubdate=article["updated"],
+                # the link to the original article is its permalink
+                unique_id=article["link"],
+                categories=(article["feed_name"],),
+                enclosures=self._get_enclosures(article),
+            )
+
+        # the feed is typically written next to the generated website
+        destination.parent.mkdir(parents=True, exist_ok=True)
+
+        with destination.open(mode="w", encoding="utf-8") as fp:
+            feed.write(fp, "utf-8")
+
+        logging.info(f"Wrote {len(feed.items)} articles to the {destination} RSS feed")
+
+    @staticmethod
+    def _get_enclosures(article: dict) -> list:
+        """
+        Returns the article's image (if any) as a list of RSS enclosures
+        """
+        image = article.get("image")
+
+        if not image:
+            return []
+
+        mime_type, _ = mimetypes.guess_type(image)
+
+        if mime_type is None or not mime_type.startswith("image/"):
+            return []
+
+        # we do not know the size of the image without fetching it
+        return [Enclosure(url=image, length="0", mime_type=mime_type)]
 
     @staticmethod
     def get_user_agent() -> str:

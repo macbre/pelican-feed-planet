@@ -41,6 +41,7 @@ def generate(generator):
     max_summary_length = config.get("PLANET_MAX_SUMMARY_LENGTH", None)
     template = Path(config["PLANET_TEMPLATE"])
     destination = Path(config["PLANET_PAGE"])
+    rss_destination = config.get("PLANET_RSS_FILE", None)
 
     logging.info("Will fetch %d feeds and store in %s", len(feeds), destination)
 
@@ -53,6 +54,23 @@ def generate(generator):
     _planet.write_page(template, destination, max_articles=max_articles)
 
     logging.info("Planet files saved in %s", destination)
+
+    if rss_destination:
+        rss_destination = Path(rss_destination)
+        title = config.get("PLANET_RSS_TITLE") or config.get("SITENAME", "Planet")
+
+        _planet.write_feed(
+            rss_destination,
+            title=title,
+            link=config.get("PLANET_RSS_LINK") or config.get("SITEURL", ""),
+            description=config.get("PLANET_RSS_DESCRIPTION")
+            or config.get("SITESUBTITLE")
+            or title,
+            max_articles=max_articles,
+            feed_url=config.get("PLANET_RSS_URL", None),
+        )
+
+        logging.info("Planet RSS feed saved in %s", rss_destination)
 
 
 def register():
