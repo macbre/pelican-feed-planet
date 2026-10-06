@@ -285,6 +285,153 @@ def test_ssl_errors_handling(datadir, tmpdir):
     assert destinationpath.open().read().strip() == expected
 
 
+def test_write_feed(datadir, tmpdir):
+
+    destinationpath = Path(tmpdir.join("planet.rss.xml").strpath)
+    assert not destinationpath.exists()
+
+    feeds = {
+        "Le blog à Perceval": "file://%s/perceval.atom.xml" % datadir,
+        "L'auberge à Karadoc": "file://%s/karadoc.atom.xml" % datadir,
+    }
+    p = Planet(feeds)
+    p.get_feeds()
+    p.write_feed(
+        destinationpath,
+        title="Kaamelott planet",
+        link="https://example.org/",
+        description="Blogs of the Round Table",
+    )
+
+    generated = feedparser.parse(destinationpath.open().read())
+
+    assert generated["feed"]["title"] == "Kaamelott planet"
+    assert generated["feed"]["link"] == "https://example.org/"
+    assert generated["feed"]["subtitle"] == "Blogs of the Round Table"
+
+    assert [entry["title"] for entry in generated["entries"]] == [
+        "Sloubi 325 !",
+        "Sept cent quarante-quatre",
+        "Sloubi 324 !",
+        "Unagi",
+        "Sloubi 5 !",
+        "Sloubi 4 !",
+        "Sloubi 3 !",
+        "Sloubi 2 !",
+        "Sloubi 1 !",
+        "Le gras, c'est la vie",
+    ]
+
+    first = generated["entries"][0]
+    assert first["link"] == "https://cestpasfaux.fr/blog/2016/11/20/sloubi-325/"
+    assert first["author"] == "Perceval le Gallois"
+    assert first["published"] == "Sun, 20 Nov 2016 10:15:00 +0200"
+    assert [tag["term"] for tag in first["tags"]] == ["Le blog à Perceval"]
+    # the HTML markup of the summary is kept intact
+    assert first["summary"].startswith("<p>Sloubi 325 ! Sloubi 325 !")
+
+
+def test_write_feed_with_total_limit(datadir, tmpdir):
+
+    destinationpath = Path(tmpdir.join("planet.rss.xml").strpath)
+
+    feeds = {
+        "Le blog à Perceval": "file://%s/perceval.atom.xml" % datadir,
+        "L'auberge à Karadoc": "file://%s/karadoc.atom.xml" % datadir,
+    }
+    p = Planet(feeds)
+    p.get_feeds()
+    p.write_feed(
+        destinationpath,
+        title="Kaamelott planet",
+        link="https://example.org/",
+        max_articles=3,
+    )
+
+    generated = feedparser.parse(destinationpath.open().read())
+
+    assert [entry["title"] for entry in generated["entries"]] == [
+        "Sloubi 325 !",
+        "Sept cent quarante-quatre",
+        "Sloubi 324 !",
+    ]
+
+
+def test_write_feed_with_no_articles(tmpdir):
+
+    destinationpath = Path(tmpdir.join("planet.rss.xml").strpath)
+
+    p = Planet({})
+    p.get_feeds()
+    p.write_feed(destinationpath, title="Empty planet", link="https://example.org/")
+
+    generated = feedparser.parse(destinationpath.open().read())
+
+    assert generated["feed"]["title"] == "Empty planet"
+    assert generated["entries"] == []
+
+
+def test_write_feed_skips_incomplete_articles(datadir, tmpdir):
+
+    destinationpath = Path(tmpdir.join("planet.rss.xml").strpath)
+
+    feeds = {
+        "Le blog à Perceval": "file://%s/perceval.atom.xml" % datadir,
+    }
+    p = Planet(feeds)
+    p.get_feeds()
+
+    # articles with no title or no link cannot end up in the feed
+    del p._articles[0]["title"]
+    p._articles[1]["link"] = ""
+
+    p.write_feed(destinationpath, title="Kaamelott planet", link="https://example.org/")
+
+    generated = feedparser.parse(destinationpath.open().read())
+
+    assert [entry["title"] for entry in generated["entries"]] == [
+        "Sloubi 5 !",
+        "Sloubi 4 !",
+        "Sloubi 3 !",
+        "Sloubi 2 !",
+        "Sloubi 1 !",
+    ]
+
+
+def test_write_feed_with_images(datadir, tmpdir):
+
+    destinationpath = Path(tmpdir.join("planet.rss.xml").strpath)
+
+    feeds = {
+        "ForoysktDaily": "file://%s/mastodon.rss.xml" % datadir,
+    }
+    p = Planet(feeds)
+    p.get_feeds()
+    p.write_feed(destinationpath, title="ForoysktDaily", link="https://example.org/")
+
+    generated = feedparser.parse(destinationpath.open().read())
+
+    # the last article has no image attached, hence no enclosure
+    enclosures = [entry.get("links")[1:] for entry in generated["entries"]]
+    assert [
+        [(link["href"], link["type"]) for link in links] for links in enclosures
+    ] == [
+        [
+            (
+                "https://files.mastodon.social/media_attachments/files/111/850/122/307/080/898/original/3b8fcb1f07af82f6.png",
+                "image/png",
+            )
+        ],
+        [
+            (
+                "https://files.mastodon.social/media_attachments/files/111/first.png",
+                "image/png",
+            )
+        ],
+        [],
+    ]
+
+
 def test_media_content_image(datadir):
 
     feeds = {
