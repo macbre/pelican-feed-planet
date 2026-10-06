@@ -1,6 +1,115 @@
 Release History
 ===============
 
+0.26.0
+------
+
+* Generate an RSS feed file with the aggregated articles (#288);
+* Use a custom HTTP user agent when fetching the feeds (#269);
+* Simplified the imports in the test suite and added a new fixture (#271);
+
+0.25.0
+------
+
+* Handle ``media:content`` tags with image attachments (#268);
+* Migrated the README from reStructuredText to Markdown (#266);
+* Updated the pinned dependencies (pelican, coverage) and the Python version
+  used in CI (#265, #267, #261);
+
+0.24.0
+------
+
+* Publishing to PyPI now uses trusted publishing (#252);
+* CI also checks against Python 3.14 (#251);
+
+0.23.0
+------
+
+* Dropped the support for Python 3.7 (#132) and 3.8, added the support for
+  Python 3.12 and 3.13 (#216);
+* Handle the exceptions raised when requesting the feeds over HTTP (#133);
+
+0.22.0
+------
+
+* Fixed a ``TypeError: %d format: a real number is required, not dict`` raised
+  when logging the statistics;
+
+0.21.0
+------
+
+* Render some additional information when running inside GitHub Actions;
+
+0.20.0
+------
+
+* Print some statistics about the articles and the feeds that were parsed;
+* Cleaned up the exceptions handling;
+
+0.19.0
+------
+
+* Use UNIX timestamps when sorting the articles (#115);
+* Fixed the check for non 2xx / 3xx HTTP response codes;
+* Made the logging of HTTP errors less verbose;
+
+0.18.0
+------
+
+* Skip the articles that raise errors when being parsed and sorted (#114);
+
+0.17.0
+------
+
+* Skip the entries with broken dates when parsing a feed (#113);
+
+0.16.0
+------
+
+* Catch the exceptions raised by ``make_date()`` and improve the logging (#111);
+* Python 3.7 or later is now required (#79), Python 3.6 is no longer supported;
+* CI now runs on Python 3.11 (#112);
+
+0.15.0
+------
+
+* Improved the logging (#30);
+
+0.14.0
+------
+
+* Test fetching the feeds over HTTP (#29);
+* Added a code coverage report (#25);
+* CI runs black as a separate step and tests Python 3.6 and 3.10 as well;
+
+0.13.0
+------
+
+* Handle the SSL issues when fetching the feeds, with a test case for a site
+  with a broken SSL certificate;
+
+0.12.0
+------
+
+This is a dependencies-only release:
+
+* Updated feedparser to 6.0.6;
+
+0.11.0
+------
+
+* Handle the dates that are not well formatted in RSS feeds (#15);
+* Improved the handling of local (``file:///``) feeds;
+* Check the bozo exceptions first when parsing a feed;
+* Moved the CI to GitHub Actions and formatted the code with black;
+
+0.10.0
+------
+
+* ``write_page``: generate the links to the blogs and the feeds;
+* ``articles``: added a ``date_iso`` entry;
+* ``planet.py``: expose the list of feeds and add logging;
+
 0.9.1
 -----
 
